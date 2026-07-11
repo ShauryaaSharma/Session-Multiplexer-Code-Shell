@@ -104,7 +104,3 @@ Open the frontend, enter a repl ID, pick a language, and click **Start Coding**.
 - **Terminal session cleanup bug.** `TerminalManager` keys sessions by socket ID but deletes by PID on exit, so exited terminal entries are never actually cleared from memory.
 
 This repo represents an early, single-host iteration of the idea. A companion repo builds on this with per-project isolation via Kubernetes-scheduled sandboxes.
-
-## License
-
-MIT
