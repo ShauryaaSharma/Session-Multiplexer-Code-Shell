@@ -13,6 +13,8 @@ A minimal, self-hosted "online IDE" — think a stripped-down code-execution pla
 3. **Editing** — `fetchDir` / `fetchContent` / `updateContent` events read and write files on local disk, and mirror saves back to S3.
 4. **Terminal** — `requestTerminal` forks a PTY (`node-pty`) scoped to that session's `tmp/<replId>` directory. Terminal I/O streams both ways over the same socket, keyed by socket ID. Multiple sessions multiplex their own PTYs through one backend process — hence the name.
 
+Because the terminal is a real shell and not a sandboxed interpreter, it can run **any file of your choice** — not just the seeded boilerplate — as long as the runtime/toolchain it needs (Node, Python, etc.) is installed on the machine the backend runs on. The only requirement on the storage side is that the project's boilerplate files exist under the expected prefix in your S3-compatible bucket — this works with **AWS S3** or **Cloudflare R2** (or any other S3-compatible endpoint), configured via `S3_ENDPOINT`.
+
 ## Architecture
 
 ```
@@ -61,7 +63,8 @@ frontend/
 ### Prerequisites
 
 - Node.js 18+
-- An S3-compatible bucket (AWS S3 or a compatible endpoint) with `base/node-js` and `base/python` template folders pre-seeded
+- Any language runtimes/tools you want to run code with (Node, Python, etc.) installed on the host running the backend — the terminal is a real shell, so it can execute whatever is available on that machine
+- An S3-compatible bucket — **AWS S3** or **Cloudflare R2** both work — with `base/node-js` and `base/python` template folders pre-seeded
 
 ### Backend
 
@@ -89,7 +92,7 @@ Open the frontend, enter a repl ID, pick a language, and click **Start Coding**.
 | `S3_BUCKET` | Bucket used for project templates and storage |
 | `AWS_ACCESS_KEY_ID` | AWS credential |
 | `AWS_SECRET_ACCESS_KEY` | AWS credential |
-| `S3_ENDPOINT` | Override for S3-compatible storage (e.g. MinIO) |
+| `S3_ENDPOINT` | Override for S3-compatible storage (e.g. Cloudflare R2, MinIO) |
 | `PORT` | Backend port (default `3001`) |
 
 ## Known limitations
