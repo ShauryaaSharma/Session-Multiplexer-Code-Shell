@@ -103,4 +103,8 @@ Open the frontend, enter a repl ID, pick a language, and click **Start Coding**.
 - **No persistence layer.** No database tracks which projects exist; re-creating an existing `replId` silently overwrites it.
 - **Terminal session cleanup bug.** `TerminalManager` keys sessions by socket ID but deletes by PID on exit, so exited terminal entries are never actually cleared from memory.
 
-This repo represents an early, single-host iteration of the idea. A companion repo builds on this with per-project isolation via Kubernetes-scheduled sandboxes.
+This repo represents an early, single-host iteration of the idea.
+
+---
+
+**Looking for the production-grade version?** Check out [**Ephemeral Sandbox Pod Scheduler**](https://github.com/ShauryaaSharma/Ephemeral-Sandbox-Pod-Scheduler). It's a Kubernetes-based rebuild that fixes this repo's core limitations: it schedules a real, isolated pod per project instead of sharing one host, so there's no more shared filesystem/CPU/memory between users; and it swaps the single hardcoded `localhost:3000` output for a per-project subdomain that actually works with multiple concurrent users. The rest of this repo's gaps, no auth, no database tracking projects, no automatic run step, and the terminal session cleanup bug, isolation and dynamic provisioning are solved there as well.
